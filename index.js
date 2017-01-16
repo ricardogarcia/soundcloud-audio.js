@@ -76,6 +76,7 @@ SoundCloud.prototype.resolve = function (url, callback) {
 
 SoundCloud.prototype._json = function (url, callback) {
   var xhr = new XMLHttpRequest();
+  xhr.setRequestHeader('DNT', ' ');
   xhr.open('GET', url);
   xhr.send(null);
   xhr.onreadystatechange = function () {
@@ -83,7 +84,7 @@ SoundCloud.prototype._json = function (url, callback) {
     var OK = 200; // status 200 is a successful return.
     if (xhr.readyState === DONE) {
       if (xhr.status === OK) {
-        callback(JSON.parse(xhr.responseText)); 
+        callback(JSON.parse(xhr.responseText));
       } else {
         console.log('Error: ' + xhr.status); // An error occurred during the request.
       }
