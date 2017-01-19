@@ -13,7 +13,7 @@
         'use strict';
 
         var $view = document.getElementById('track');
-        var player = global.player = new SoundCloudAudio('08f79801a998c381762ec5b15e4914d5');
+        var player = global.player = new SoundCloudAudio('5cc79b3c53f6b0a9957f352c662e6c62');
 
         var prettyTime = function (time) {
             var hours = Math.floor(time / 3600);
@@ -77,7 +77,7 @@
             $view.appendChild($button);
         };
 
-        player.resolve('https://soundcloud.com/djangodjango/first-light', render);
+        player.resolveUrl('http://soundcloud.com/you-two/u2-sunday-bloody-sunday', render);
     })(this);
     </script>
 </body>

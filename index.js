@@ -1,5 +1,7 @@
 'use strict';
 
+var SC = require('soundcloud');
+
 var anchor;
 var keys = 'protocol hostname host pathname port search hash href'.split(' ');
 function _parseURL (url) {
@@ -41,7 +43,44 @@ function SoundCloud (clientId) {
     this.duration = 0;
 
     this.audio = document.createElement('audio');
+    SC.initialize({
+        client_id: clientId,
+        redirect_uri: 'http://example.com/callback'
+    });
 }
+
+
+SoundCloud.prototype.resolveUrl = function (url, callback) {
+    if (!url) {
+        throw new Error('SoundCloud track or playlist path is required');
+    }
+
+
+    SC.resolve(url).then( function(data) {
+        console.log(data);
+        this.cleanData();
+        console.log(data);
+        if (Array.isArray(data)) {
+            var tracks = data;
+            data = {tracks: tracks};
+            this._playlist = data;
+        } else if (data.tracks) {
+            this._playlist = data;
+        } else {
+            this._track = data;
+
+            // save timings
+            var U = _parseURL(url);
+            this._track.stream_url += U.hash;
+        }
+        console.log("got paste if else block")
+        this.duration = data.duration && !isNaN(data.duration) ?
+            data.duration / 1000 : // convert to seconds
+            0; // no duration is zero
+        console.log(data);
+        callback(data);
+    }.bind(this));
+};
 
 SoundCloud.prototype.resolve = function (url, callback) {
     if (!url) {
